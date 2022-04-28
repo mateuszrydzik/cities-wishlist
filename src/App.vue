@@ -6,17 +6,22 @@
         <div class="map">
             <MapContainer />
         </div>
+        <div class="bt">
+            <ButtonAddCity />
+        </div>
     </div>
 </template>
 
 <script>
 import Navbar from './components/Navbar.vue'
+import ButtonAddCity from './components/ButtonAddCity.vue'
 import MapContainer from './components/MapContainer.vue'
 
 export default {
     name: 'App',
     components: {
         Navbar,
+        ButtonAddCity,
         MapContainer
     },
     data() {
@@ -30,24 +35,30 @@ export default {
 
 <style scoped>
 html, body {
-    height: fit-content;
+    height: 100%;
     margin: 0;
 }
 #app {
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    height: 100%;
+    height: 100vh;
     width: 100%;
 }
 .navbar {
     width: 100%;
-    height: 40px;
+    height: 60px;
     color: white;
     background-color: green;
     font-size: larger
 }
+.bt {
+    position: fixed;
+    right: 5%;
+    bottom: 5%;
+    z-index: 0;
+}
 .map {
     width: 100%;
-    height: 80%;
+    height: 100%;
     position:fixed;
 }
 </style>
