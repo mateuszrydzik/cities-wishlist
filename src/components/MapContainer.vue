@@ -1,6 +1,7 @@
 <template>
   <div ref="map-root"
-       style="width: 100%; height: 100%">
+       style="width: 100%; height: 100%"
+       @click="GeolocationCoordinates">
   </div>
 </template>
 
@@ -14,11 +15,11 @@
   // good looking buttons!
   import 'ol/ol.css'
   import {ScaleLine, defaults as defaultControls} from 'ol/control';
-
+  import { fromLonLat } from 'ol/proj'
+  import { toLonLat } from 'ol/proj'
+  
   export default {
     name: 'MapContainer',
-    components: {},
-    props: {},
     mounted() {
       // this is where we create the OpenLayers map
       new Map({
@@ -33,12 +34,26 @@
 
         // the map view will initially show the whole world
         view: new View({
-          zoom: 5,
-          projection: 'EPSG:4326',
-          center: [0, 51],
+          zoom: 4,
+          projection: 'EPSG:3857',
+          center: fromLonLat([15, 52]),
           constrainResolution: true
         }),
       })
     },
+    methods: {
+      reverseGeocode(coords) {
+      fetch('http://nominatim.openstreetmap.org/reverse?format=json&lon=' + coords[0] + '&lat=' + coords[1])
+      .then(function(response) {
+            return response.json();
+        }).then(function(json) {
+            console.log(json);
+        });
+      },
+      getCoords(e) {
+        const {lat, lng} = e.latlng;
+        this.reverseGeocode(coord)
+    }
   }
+}
 </script>
