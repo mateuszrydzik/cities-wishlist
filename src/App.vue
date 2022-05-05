@@ -33,15 +33,17 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 html, body {
     height: 100%;
     margin: 0;
 }
 #app {
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    height: 100vh;
+    height: 100%;
     width: 100%;
+    top: 0;
+    left: 0;
 }
 .navbar {
     width: 100%;
@@ -54,11 +56,11 @@ html, body {
     position: fixed;
     right: 5%;
     bottom: 5%;
-    z-index: 0;
+    z-index: 1;
 }
 .map {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 60px);
     position:fixed;
 }
 </style>
