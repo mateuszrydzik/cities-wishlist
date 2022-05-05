@@ -1,23 +1,34 @@
 <template>
     <div id="button">
-        <button @click="logMessage">+</button>
+        <button @click="enterEditMode">{{icon}}</button>
     </div>
 </template>
 
 <script>
 export default{
     name: 'ButtonAddCity',
-    methods: {
-        logMessage() {
-            console.log('Gratulacje uzytkowniku')
+    data() {
+        return {
+            editModeIsActive: false,
+            icon: '+'
         }
-    }
+    },
+    methods: {
+        enterEditMode() {
+            this.editModeIsActive = !this.editModeIsActive
+            if (this.editModeIsActive == true) {
+                this.icon = 'edit'
+            } else {
+                this.icon = '+'
+            }
+        }
+    } 
 }
 </script>
 
-<style scoped>
+<style>
 button {
-  background-color: #4CAF50;
+  background-color: green;
   font-size: 30px;
   border: none;
   color: white;
