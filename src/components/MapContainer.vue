@@ -15,8 +15,7 @@
   // good looking buttons!
   import 'ol/ol.css'
   import {ScaleLine, defaults as defaultControls} from 'ol/control';
-  import { fromLonLat } from 'ol/proj'
-  import { toLonLat } from 'ol/proj'
+  import { fromLonLat, toLonLat  } from 'ol/proj';
   
   export default {
     name: 'MapContainer',
@@ -50,10 +49,9 @@
             console.log(json);
         });
       },
-      getCoords(e) {
-        const {lat, lng} = e.latlng;
-        this.reverseGeocode(coord)
-    }
+      getCoords() {
+         console.log(this.map.getView().getCenter())
+      }
   }
 }
 </script>

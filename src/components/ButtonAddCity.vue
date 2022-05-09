@@ -15,8 +15,9 @@ export default{
     },
     methods: {
         enterEditMode() {
-            this.editModeIsActive = !this.editModeIsActive
-            if (this.editModeIsActive == true) {
+            this.editModeIsActive = !this.editModeIsActive;
+            this.icon = this.editModeIsActive ? 'edit' : '+';
+            if (this.editModeIsActive === true) {
                 this.icon = 'edit'
             } else {
                 this.icon = '+'
