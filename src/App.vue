@@ -1,14 +1,16 @@
 <template>
     <div id="app">
-        <div class="navbar">
-             <Navbar :title="title"/>          
-        </div>
-        <div class="map">
-            <MapContainer />
-        </div>
-        <div class="bt">
-            <ButtonAddCity />
-        </div>
+        <v-app>
+            <div class="navbar">
+                <Navbar :title="title"/>          
+            </div>
+            <div class="map">
+             <MapContainer />
+            </div>
+            <div class="bt">
+              <ButtonAddCity />
+            </div>
+        </v-app>
     </div>
 </template>
 
@@ -60,7 +62,7 @@ html, body {
 }
 .map {
     width: 100%;
-    height: calc(100% - 60px);
+    height: 100%;
     position:fixed;
 }
 </style>

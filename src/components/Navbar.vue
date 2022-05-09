@@ -1,7 +1,7 @@
 <template>
-    <div id="navbar">
-        {{ title }}
-    </div>
+    <v-app-bar>
+        <v-toolbar-title>{{ title }}</v-toolbar-title>
+    </v-app-bar>
 </template>
 
 <script>
