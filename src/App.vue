@@ -1,28 +1,22 @@
 <template>
-    <div id="app">
-        <v-app>
-            <div class="navbar">
-                <Navbar :title="title"/>          
-            </div>
-            <div class="map">
-             <MapContainer />
-            </div>
-            <div class="bt">
-              <ButtonAddCity />
-            </div>
-        </v-app>
-    </div>
+	<v-app>
+		<div id="app">
+			<Toolbar :title="title"/>          
+			<MapContainer />
+			<ButtonAddCity />
+		</div>
+	</v-app>
 </template>
 
 <script>
-import Navbar from './components/Navbar.vue'
+import Toolbar from './components/Toolbar.vue'
 import ButtonAddCity from './components/ButtonAddCity.vue'
 import MapContainer from './components/MapContainer.vue'
 
 export default {
     name: 'App',
     components: {
-        Navbar,
+        Toolbar,
         ButtonAddCity,
         MapContainer
     },
@@ -46,23 +40,5 @@ html, body {
     width: 100%;
     top: 0;
     left: 0;
-}
-.navbar {
-    width: 100%;
-    height: 60px;
-    color: white;
-    background-color: green;
-    font-size: larger
-}
-.bt {
-    position: fixed;
-    right: 5%;
-    bottom: 5%;
-    z-index: 1;
-}
-.map {
-    width: 100%;
-    height: 100%;
-    position:fixed;
 }
 </style>
