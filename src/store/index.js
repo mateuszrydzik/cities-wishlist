@@ -1,4 +1,4 @@
-import { createStore, storeKey } from 'vuex'
+import { createStore } from 'vuex'
 import axios from 'axios'
 
 export default createStore({
@@ -8,8 +8,8 @@ export default createStore({
     cursor: 'default',
     city: '',
     country: '',
-    lat: '29.4',
-    lon: '-98.4'
+    lat: '0',
+    lon: '15'
   },
   mutations: {
     enterEditMode(state) {
@@ -33,7 +33,9 @@ export default createStore({
     }
   },
   getters: {
-
+    formattedLocation(state){
+      return `${state.city} , ${state.country}`
+    }
   },
 
 })
