@@ -11,9 +11,7 @@
   import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer'
   import {OSM, Vector as VectorSource } from 'ol/source';
 	import {Draw} from 'ol/interaction';
-  import {Circle as CircleStyle, Fill, Style} from 'ol/style';
   import {fromLonLat} from 'ol/proj';
-  import GeoJSON from 'ol/format/GeoJSON';
 
   // importing the OpenLayers stylesheet is required for having
   // good looking buttons!
@@ -21,23 +19,18 @@
 
   export default {
     name: 'MapContainer',
+    computed: {
+      watchEditMode(){
+        return this.$store.getters.editModeIsActiveState
+      }
+    },
     mounted() {
       const raster = new TileLayer({
             source: new OSM()
           });
-			const source = new VectorSource({
-        format: new GeoJSON({dataProjection: 'EPSG:3857'})
-      });
+			const source = new VectorSource();
       const vector = new VectorLayer({
-        source:source,
-        style: new Style({
-          image: new CircleStyle({
-            radius:5 ,
-            fill: new Fill({
-              color: '#ffcc3'
-            })
-          })
-        })
+        source:source
       });
       const map = new Map({
         target: this.$refs['map-root'],
@@ -49,17 +42,28 @@
           constrainResolution: true
         }),
       });
-      this.addInteractions(map);
+      const draw = new Draw({
+        type:'Point',
+        source:source
+      })
     },
     methods: {
-			addInteractions(map) {
-          let draw = new Draw({
-    			source: this.source,
-    			type: 'Point',
-  			  });
-  			  map.addInteraction(draw);
-			}
-  }
+      addDraw(map, draw){
+        map.addInteraction(draw)
+        },
+      removeDraw(map, draw){
+        map.removeInteraction(draw)
+        }
+			},
+    watch: {
+      watchEditMode(newState, oldState) {
+        if (newState === true) {
+          this.addDraw(this.map, this.draw)
+        } else if (newState === false){
+          this.removeDraw(this.map, this.draw)
+        }
+      }
+    }
 }
 
 </script>
