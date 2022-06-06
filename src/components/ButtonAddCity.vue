@@ -5,7 +5,7 @@
         icon 
         elevation="10"
         color="green" 
-        @click="$store.dispatch('getRevgeocode')"> 
+        @click="$store.commit('enterEditMode')"> 
           {{ $store.state.icon }} 
       </v-btn>
     </v-container>
