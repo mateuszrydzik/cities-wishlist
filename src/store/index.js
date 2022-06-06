@@ -6,8 +6,6 @@ export default createStore({
     editModeIsActive: false,
     icon: '+',
     cursor: 'default',
-    city: '',
-    country: '',
     lat: '0',
     lon: '15'
   },
@@ -17,14 +15,14 @@ export default createStore({
       state.icon = state.editModeIsActive ? 'edit' : '+';
       state.cursor= state.editModeIsActive ? 'crosshair' : 'default';
     },
-    logRevgeocode(state, data) {
+    logRevgeocode(data) {
       try {
-        state.city = data.items[0].address.city
-        state.country = data.items[0].address.countryName
+        const city = data.items[0].address.city
+        const country = data.items[0].address.countryName
       } catch (error) {
         console.log(error)
       }
-      console.log(state.city, ',', state.country)
+      console.log(city, ',', country)
     }
   },
   actions: {
@@ -33,8 +31,8 @@ export default createStore({
     }
   },
   getters: {
-    formattedLocation(state){
-      return `${state.city} , ${state.country}`
+    editModeIsActiveState(state){
+      return state.editModeIsActive
     }
   },
 
