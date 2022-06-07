@@ -12,7 +12,6 @@
   import {OSM, Vector as VectorSource } from 'ol/source';
 	import {Draw} from 'ol/interaction';
   import {fromLonLat} from 'ol/proj';
-
   // importing the OpenLayers stylesheet is required for having
   // good looking buttons!
   import 'ol/ol.css'
@@ -45,26 +44,35 @@
       const draw = new Draw({
         type:'Point',
         source:source
-      })
+      });
+      this.addMap(map,draw) //dziala
     },
     methods: {
-      addDraw(map, draw){
+      addMap(map, draw){
         map.addInteraction(draw)
+      },
+      changeDraw(state, map, draw){
+        if (state===true){
+          map.addInteraction(draw)
+          } else if (state===false){
+          map.removeInteraction(draw)
+          }
         },
-      removeDraw(map, draw){
-        map.removeInteraction(draw)
+        testLog(state){
+          console.log(`current state: ${state}`)
         }
 			},
     watch: {
-      watchEditMode(newState, oldState) {
-        if (newState === true) {
-          this.addDraw(this.map, this.draw)
-        } else if (newState === false){
-          this.removeDraw(this.map, this.draw)
+      watchEditMode: {
+        handler: function(newState, oldState){
+          // this.testLog(newState) poprawnie loguje, this z metodami dziala
+          this.changeDraw(newState, this.map, this.draw) 
+          //TypeError: undefined is not an object
+          //map i draw jest undefined w watch
+          }
         }
       }
     }
-}
 
 </script>
 
