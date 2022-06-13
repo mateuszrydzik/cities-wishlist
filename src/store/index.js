@@ -1,42 +1,46 @@
-import { createStore } from 'vuex'
-import axios from 'axios'
+import { createStore } from "vuex";
+import axios from "axios";
 
 export default createStore({
   state: {
     editModeIsActive: false,
-    icon: '+',
-    cursor: 'default',
-    lat: '0',
-    lon: '15'
+    cursor: "default",
   },
   mutations: {
     enterEditMode(state) {
       state.editModeIsActive = !state.editModeIsActive;
-      state.icon = state.editModeIsActive ? 'edit' : '+';
-      state.cursor= state.editModeIsActive ? 'crosshair' : 'default';
+      state.cursor = state.editModeIsActive ? "crosshair" : "default";
     },
     logRevgeocode(data) {
       try {
-        const city = data.items[0].address.city
-        const country = data.items[0].address.countryName
+        const city = data.items[0].address.city;
+        const country = data.items[0].address.countryName;
+        console.log(city, country);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-      console.log(city, ',', country)
-    }
+      console.log(city, ",", country);
+    },
   },
   actions: {
-    getRevgeocode({ state, commit }){
-      axios.get(`https://revgeocode.search.hereapi.com/v1/revgeocode?at=${state.lat},${state.lon}&lang=en-US&apikey=LVvT59dcc74KpvXZ2cnoSZ2jLBObvuBXWqCzUMUGGo0`).then(response => { commit('logRevgeocode', response.data)})
-    }
+    async getRevgeocode({ commit }, coords) {
+      axios
+        .get(
+          `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${coords}&lang=en-US&apikey=LVvT59dcc74KpvXZ2cnoSZ2jLBObvuBXWqCzUMUGGo0`
+        )
+        .then((response) => {
+          console.log(
+            response.data.items[0].address.city,
+            ",",
+            response.data.items[0].address.countryName
+          );
+          // commit("logRevgeocode", data);
+        });
+    },
   },
   getters: {
-    editModeIsActiveState(state){
-      return state.editModeIsActive
-    }
+    editModeIsActiveState(state) {
+      return state.editModeIsActive;
+    },
   },
-
-})
-
-
-
+});
