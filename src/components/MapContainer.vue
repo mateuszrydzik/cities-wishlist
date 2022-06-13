@@ -9,8 +9,7 @@ import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
 import { OSM, Vector as VectorSource } from "ol/source";
 import { Draw } from "ol/interaction";
 import { fromLonLat, transform } from "ol/proj";
-// importing the OpenLayers stylesheet is required for having
-// good looking buttons!
+import Overlay from "ol/Overlay";
 import "ol/ol.css";
 
 export default {
@@ -33,6 +32,9 @@ export default {
         type: "Point",
         source: vectorLayer.getSource(),
       });
+      // const overlay = new Overlay({
+      //   element: this.$refs["modal"],
+      // });
       draw.on("drawend", (event) => {
         const coordinates = transform(
           event.feature.getGeometry().getCoordinates(),
@@ -41,11 +43,13 @@ export default {
         );
         console.log(coordinates);
         this.$store.dispatch("getRevgeocode", coordinates.reverse());
+        // overlay.setPosition(coordinates);
         this.toggleEditMode();
       });
       draw.setActive(false);
       draw.set("name", "drawInteraction");
       this.map.addLayer(vectorLayer);
+      // this.map.addOverlay(overlay);
       this.map.addInteraction(draw);
     },
     toggleEditMode() {
