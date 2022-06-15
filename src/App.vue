@@ -4,7 +4,6 @@
       <Toolbar :title="title" />
       <MapContainer />
       <ButtonAddCity />
-      <Modal></Modal>
     </div>
   </v-app>
 </template>
@@ -13,7 +12,6 @@
 import Toolbar from "./components/Toolbar.vue";
 import ButtonAddCity from "./components/ButtonAddCity.vue";
 import MapContainer from "./components/MapContainer.vue";
-import Modal from "./components/Modal.vue";
 
 export default {
   name: "App",
@@ -21,7 +19,6 @@ export default {
     Toolbar,
     ButtonAddCity,
     MapContainer,
-    Modal,
   },
   data() {
     return {
