@@ -5,36 +5,31 @@ export default createStore({
   state: {
     editModeIsActive: false,
     cursor: "default",
+    city: undefined,
+    country: undefined,
   },
   mutations: {
     enterEditMode(state) {
       state.editModeIsActive = !state.editModeIsActive;
       state.cursor = state.editModeIsActive ? "crosshair" : "default";
     },
-    logRevgeocode(data) {
+    logRevgeocode(state, response) {
       try {
-        const city = data.items[0].address.city;
-        const country = data.items[0].address.countryName;
-        console.log(city, country);
+        state.city = response.data.items[0].address.city;
+        state.country = response.data.items[0].address.countryName;
       } catch (error) {
         console.log(error);
       }
-      console.log(city, ",", country);
     },
   },
   actions: {
     async getRevgeocode({ commit }, coords) {
-      axios
+      await axios
         .get(
           `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${coords}&lang=en-US&apikey=LVvT59dcc74KpvXZ2cnoSZ2jLBObvuBXWqCzUMUGGo0`
         )
         .then((response) => {
-          console.log(
-            response.data.items[0].address.city,
-            ",",
-            response.data.items[0].address.countryName
-          );
-          // commit("logRevgeocode", data);
+          commit("logRevgeocode", response);
         });
     },
   },
