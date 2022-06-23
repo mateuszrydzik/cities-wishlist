@@ -1,6 +1,9 @@
 <template>
-  <div ref="map-root" :style="{ cursor: $store.state.cursor }"></div>
-  <div id="modal" ref="modal"><Modal /></div>
+  <div id="map" ref="map-root" :style="{ cursor: $store.state.cursor }"></div>
+  <div id="modal" :city="city" :country="country" ref="modal">
+    {{ city }}, {{ country }} <br />
+    <input id="input" placeholder="notatki" />
+  </div>
 </template>
 
 <script>
@@ -23,6 +26,8 @@ export default {
   data: () => ({
     active: false,
     map: undefined,
+    city: undefined,
+    country: undefined,
   }),
   computed: {
     watchEditMode() {
@@ -63,6 +68,9 @@ export default {
                   stroke: new Stroke({
                     color: "green",
                   }),
+                  fill: new Fill({
+                    color: "green",
+                  }),
                   radius: 5,
                 }),
                 text: new Text({
@@ -96,6 +104,29 @@ export default {
       }
       return interaction;
     },
+    getFeauturesOnClick() {
+      this.map.on("singleclick", (event) => {
+        const feature = this.map.forEachFeatureAtPixel(
+          event.pixel,
+          function (feature, layer) {
+            return feature;
+          }
+        );
+
+        const overlay = new Overlay({
+          element: this.$refs["modal"],
+        });
+
+        if (feature) {
+          const coord = this.map.getCoordinateFromPixel(event.pixel);
+          const object = feature.getProperties();
+          this.city = object.city;
+          this.country = object.country;
+          this.map.addOverlay(overlay);
+          overlay.setPosition(coord);
+        }
+      });
+    },
   },
   watch: {
     watchEditMode: {
@@ -121,18 +152,29 @@ export default {
       }),
     });
     this.addDrawInteraction();
+    this.getFeauturesOnClick();
   },
 };
 </script>
 
 <style scoped>
-div {
+#map {
   width: 100%;
   height: calc(100% - 60px);
   position: fixed;
 }
-
-.modal {
-  color: black;
+#modal {
+  position: absolute;
+  background-color: white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #cccccc;
+  bottom: 12px;
+  left: -50px;
+  min-width: 280px;
+}
+#input {
+  font-size: small;
 }
 </style>
