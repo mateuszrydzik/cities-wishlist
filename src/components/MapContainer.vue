@@ -1,8 +1,8 @@
 <template>
   <div id="map" ref="map-root" :style="{ cursor: $store.state.cursor }"></div>
-  <div id="modal" :city="city" :country="country" ref="modal">
+  <div id="modal" :city="city" :country="country" :notes="notes" ref="modal">
     {{ city }}, {{ country }} <br />
-    <input id="input" placeholder="notatki" />
+    <textarea id="input" v-model="notes" placeholder="notes"></textarea>
   </div>
 </template>
 
@@ -28,6 +28,7 @@ export default {
     map: undefined,
     city: undefined,
     country: undefined,
+    notes: undefined,
   }),
   computed: {
     watchEditMode() {
@@ -83,8 +84,6 @@ export default {
               })
             );
           });
-        // this.map.addOverlay(overlay);
-        // overlay.setPosition(coordinates);
         this.toggleEditMode();
       });
       draw.setActive(false);
@@ -122,6 +121,10 @@ export default {
           const object = feature.getProperties();
           this.city = object.city;
           this.country = object.country;
+          feature.setProperties({
+            notes: this.notes,
+          });
+          // this.notes = object.notes;
           this.map.addOverlay(overlay);
           overlay.setPosition(coord);
         }
@@ -172,7 +175,7 @@ export default {
   border: 1px solid #cccccc;
   bottom: 12px;
   left: -50px;
-  min-width: 280px;
+  min-width: 200px;
 }
 #input {
   font-size: small;
