@@ -2,7 +2,12 @@
   <div id="map" ref="map-root" :style="{ cursor: $store.state.cursor }"></div>
   <div id="modal" :city="city" :country="country" :notes="notes" ref="modal">
     {{ city }}, {{ country }} <br />
-    <textarea id="input" v-model="notes" placeholder="notes"></textarea>
+    <textarea
+      @keyup.enter="submitNotes"
+      id="input"
+      v-model="notes"
+      placeholder="notes"
+    ></textarea>
   </div>
 </template>
 
@@ -117,18 +122,25 @@ export default {
         });
 
         if (feature) {
+          this.notes = undefined;
           const coord = this.map.getCoordinateFromPixel(event.pixel);
           const object = feature.getProperties();
+          if (object.notes) {
+            this.notes = object.notes;
+          }
           this.city = object.city;
           this.country = object.country;
           feature.setProperties({
             notes: this.notes,
           });
-          // this.notes = object.notes;
           this.map.addOverlay(overlay);
           overlay.setPosition(coord);
+          console.log(object);
         }
       });
+    },
+    submitNotes() {
+      console.log(this.currentNote);
     },
   },
   watch: {
