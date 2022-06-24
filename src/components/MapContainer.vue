@@ -2,12 +2,7 @@
   <div id="map" ref="map-root" :style="{ cursor: $store.state.cursor }"></div>
   <div id="modal" :city="city" :country="country" :notes="notes" ref="modal">
     {{ city }}, {{ country }} <br />
-    <textarea
-      @keyup.enter="submitNotes"
-      id="input"
-      v-model="notes"
-      placeholder="notes"
-    ></textarea>
+    <textarea id="input" v-model="notes" placeholder="notes"></textarea>
   </div>
 </template>
 
@@ -34,6 +29,7 @@ export default {
     city: undefined,
     country: undefined,
     notes: undefined,
+    id: 0,
   }),
   computed: {
     watchEditMode() {
@@ -68,6 +64,7 @@ export default {
               city: this.$store.state.city,
               country: this.$store.state.country,
             });
+            event.feature.setId(this.id);
             event.feature.setStyle(
               new Style({
                 image: new Circle({
@@ -90,6 +87,7 @@ export default {
             );
           });
         this.toggleEditMode();
+        this.id += 1;
       });
       draw.setActive(false);
       draw.set("name", "drawInteraction");
@@ -116,13 +114,10 @@ export default {
             return feature;
           }
         );
-
         const overlay = new Overlay({
           element: this.$refs["modal"],
         });
-
         if (feature) {
-          this.notes = undefined;
           const coord = this.map.getCoordinateFromPixel(event.pixel);
           const object = feature.getProperties();
           if (object.notes) {
@@ -135,12 +130,8 @@ export default {
           });
           this.map.addOverlay(overlay);
           overlay.setPosition(coord);
-          console.log(object);
         }
       });
-    },
-    submitNotes() {
-      console.log(this.currentNote);
     },
   },
   watch: {
