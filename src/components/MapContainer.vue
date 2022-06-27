@@ -2,7 +2,12 @@
   <div id="map" ref="map-root" :style="{ cursor: $store.state.cursor }"></div>
   <div id="modal" :city="city" :country="country" :notes="notes" ref="modal">
     {{ city }}, {{ country }} <br />
-    <textarea id="input" v-model="notes" placeholder="notes"></textarea>
+    <textarea
+      id="input"
+      @keyup.enter="saveNotesToFeature()"
+      v-model="notes"
+      placeholder="notes"
+    ></textarea>
   </div>
 </template>
 
@@ -25,11 +30,13 @@ export default {
   },
   data: () => ({
     active: false,
+    vectorLayer: undefined,
     map: undefined,
     city: undefined,
     country: undefined,
     notes: undefined,
     id: 0,
+    currentId: undefined,
   }),
   computed: {
     watchEditMode() {
@@ -41,12 +48,12 @@ export default {
   },
   methods: {
     addDrawInteraction() {
-      const vectorLayer = new VectorLayer({
+      this.vectorLayer = new VectorLayer({
         source: new VectorSource(),
       });
       const draw = new Draw({
         type: "Point",
-        source: vectorLayer.getSource(),
+        source: this.vectorLayer.getSource(),
       });
       const overlay = new Overlay({
         element: this.$refs["modal"],
@@ -91,7 +98,7 @@ export default {
       });
       draw.setActive(false);
       draw.set("name", "drawInteraction");
-      this.map.addLayer(vectorLayer);
+      this.map.addLayer(this.vectorLayer);
       this.map.addInteraction(draw);
     },
     toggleEditMode() {
@@ -118,6 +125,7 @@ export default {
           element: this.$refs["modal"],
         });
         if (feature) {
+          this.notes = undefined;
           const coord = this.map.getCoordinateFromPixel(event.pixel);
           const object = feature.getProperties();
           if (object.notes) {
@@ -125,12 +133,19 @@ export default {
           }
           this.city = object.city;
           this.country = object.country;
-          feature.setProperties({
-            notes: this.notes,
-          });
+          this.currentId = feature.getId();
           this.map.addOverlay(overlay);
           overlay.setPosition(coord);
+          console.log(object);
         }
+      });
+    },
+    saveNotesToFeature() {
+      const currentFeature = this.vectorLayer
+        .getSource()
+        .getFeatureById(this.currentId);
+      currentFeature.setProperties({
+        notes: this.notes,
       });
     },
   },
@@ -182,5 +197,7 @@ export default {
 }
 #input {
   font-size: small;
+  width: 150px;
+  height: 60px;
 }
 </style>
