@@ -8,8 +8,8 @@
       v-model="notes"
       placeholder="notes"
     ></textarea>
-    <v-btn size="small" color="green" @click="saveNotesToFeature()"
-      >save notes</v-btn
+    <v-btn size="small" color="green" @click="saveNotesToFeature()">
+      save notes</v-btn
     >
   </div>
 </template>
