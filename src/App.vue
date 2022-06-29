@@ -2,29 +2,25 @@
   <v-app>
     <div id="app">
       <Toolbar :title="title" />
-      <MapContainer />
-      <ButtonAddCity />
+      <router-view />
     </div>
   </v-app>
 </template>
 
 <script>
 import Toolbar from "./components/Toolbar.vue";
-import ButtonAddCity from "./components/ButtonAddCity.vue";
-import MapContainer from "./components/MapContainer.vue";
 
 export default {
   name: "App",
   components: {
     Toolbar,
-    ButtonAddCity,
-    MapContainer,
   },
-  data() {
-    return {
-      title: "Cities Wishlist",
-    };
-  },
+  data: () => ({
+    title: "Cities Wishlist",
+    loggedIn: false,
+    username: "admin",
+    password: "admin",
+  }),
 };
 </script>
 
