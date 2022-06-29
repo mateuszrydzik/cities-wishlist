@@ -12,10 +12,12 @@
       save notes</v-btn
     >
   </div>
+  <ButtonAddCity />
 </template>
 
 <script>
 import Modal from "./Modal.vue";
+import ButtonAddCity from "./ButtonAddCity.vue";
 import View from "ol/View";
 import Map from "ol/Map";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
@@ -30,6 +32,7 @@ export default {
   name: "MapContainer",
   components: {
     Modal,
+    ButtonAddCity,
   },
   data: () => ({
     active: false,
