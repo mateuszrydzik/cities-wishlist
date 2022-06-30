@@ -7,6 +7,7 @@ export default createStore({
     cursor: "default",
     city: undefined,
     country: undefined,
+    user: undefined,
   },
   mutations: {
     enterEditMode(state) {
@@ -21,6 +22,12 @@ export default createStore({
         console.log(error);
       }
     },
+    setUser(state, username) {
+      state.user = username;
+    },
+    Logout(state) {
+      state.user = undefined;
+    },
   },
   actions: {
     async getRevgeocode({ commit }, coords) {
@@ -32,10 +39,20 @@ export default createStore({
           commit("logRevgeocode", response);
         });
     },
+    async Login({ commit }, User) {
+      await axios.post("login", User);
+      await commit("setUser", User.get("username"));
+    },
+    async Logout({ commit }) {
+      let user = undefined;
+      commit("logout", user);
+    },
   },
   getters: {
     editModeIsActiveState(state) {
       return state.editModeIsActive;
     },
+    StateUser: (state) => state.user,
+    isAuthenticated: (state) => !!state.user,
   },
 });
