@@ -5,7 +5,12 @@
     </h1>
     <p class="description">Easy to use app that helps you plan future trips</p>
     <v-card-actions class="justify-center">
-      <v-btn :rounded="0" min-width="300px" variant="outlined" color="green"
+      <v-btn
+        :rounded="0"
+        min-width="300px"
+        variant="outlined"
+        color="green"
+        @click="Login()"
         >login to use</v-btn
       ></v-card-actions
     >
@@ -37,6 +42,11 @@
 <script>
 export default {
   name: "Welcome",
+  methods: {
+    Login() {
+      this.$router.push("/login");
+    },
+  },
 };
 </script>
 <style scoped>
