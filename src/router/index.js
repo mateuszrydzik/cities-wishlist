@@ -11,9 +11,9 @@ const routes = [
     path: "/app",
     name: "MapContainer",
     component: MapContainer,
-    meta: {
-      requiresAuth: true,
-    },
+    // meta: {
+    //   requiresAuth: true,
+    // },
   },
   { path: "/login", name: "Login", component: Login },
 ];
