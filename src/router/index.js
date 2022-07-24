@@ -23,16 +23,16 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (!store.getters.isAuthenticated) {
-      next({ name: "Login" });
-    } else {
-      next({ name: "MapContainer" });
-    }
-  } else {
-    next();
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some((record) => record.meta.requiresAuth)) {
+//     if (!store.getters.isAuthenticated) {
+//       next({ name: "Login" });
+//     } else {
+//       next({ name: "MapContainer" });
+//     }
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;
