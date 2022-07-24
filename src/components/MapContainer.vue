@@ -2,22 +2,19 @@
   <div id="map" ref="map-root" :style="{ cursor: $store.state.cursor }"></div>
   <div id="modal" :city="city" :country="country" :notes="notes" ref="modal">
     {{ city }}, {{ country }} <br />
-    <textarea
-      id="input"
-      @keyup.enter="saveNotesToFeature()"
-      v-model="notes"
-      placeholder="notes"
-    ></textarea>
+    <textarea id="input" v-model="notes" placeholder="notes"></textarea>
     <v-btn size="small" color="green" @click="saveNotesToFeature()">
       save notes</v-btn
     >
   </div>
   <ButtonAddCity />
+  <ButtonImportCity />
 </template>
 
 <script>
 import Modal from "./Modal.vue";
 import ButtonAddCity from "./ButtonAddCity.vue";
+import ButtonImportCity from "./ButtonImportCity.vue";
 import View from "ol/View";
 import Map from "ol/Map";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
@@ -27,12 +24,14 @@ import { fromLonLat, transform } from "ol/proj";
 import Overlay from "ol/Overlay";
 import { Style, Text, Fill, Stroke, Circle } from "ol/style";
 import "ol/ol.css";
+import GeoJSON from "ol/format/GeoJSON";
 
 export default {
   name: "MapContainer",
   components: {
     Modal,
     ButtonAddCity,
+    ButtonImportCity,
   },
   data: () => ({
     active: false,
@@ -76,6 +75,7 @@ export default {
             event.feature.setProperties({
               city: this.$store.state.city,
               country: this.$store.state.country,
+              notes: "",
             });
             event.feature.setId(this.id);
             event.feature.setStyle(
@@ -100,6 +100,7 @@ export default {
             );
           });
         this.toggleEditMode();
+        this.getFeauturesOnClick();
         this.id += 1;
       });
       draw.setActive(false);
@@ -131,7 +132,7 @@ export default {
           element: this.$refs["modal"],
         });
         if (feature) {
-          this.notes = undefined;
+          this.notes = "";
           const coord = this.map.getCoordinateFromPixel(event.pixel);
           const object = feature.getProperties();
           if (object.notes) {
@@ -142,7 +143,6 @@ export default {
           this.currentId = feature.getId();
           this.map.addOverlay(overlay);
           overlay.setPosition(coord);
-          console.log(object);
         }
       });
     },
@@ -153,6 +153,47 @@ export default {
       currentFeature.setProperties({
         notes: this.notes,
       });
+    },
+    importPlace() {
+      const importedVectorLayer = new VectorLayer({
+        source: new VectorSource({
+          format: new GeoJSON({
+            dataProjection: "EPSG:3857",
+            featureProjection: "EPSG:4326",
+          }),
+          url: "http://127.0.0.1:5000/place",
+        }),
+      });
+
+      importedVectorLayer.getSource().on("change", function (evt) {
+        const source = evt.target;
+        if (source.getState() === "ready") {
+          for (const feature in source.getFeatures()) {
+            // console.log(source.getFeatures()[feature].values_);
+            source.getFeatures()[feature].setStyle(
+              new Style({
+                image: new Circle({
+                  stroke: new Stroke({
+                    color: "green",
+                  }),
+                  fill: new Fill({
+                    color: "green",
+                  }),
+                  radius: 5,
+                }),
+                text: new Text({
+                  font: "12px Trebuchet MS",
+                  text: source.getFeatures()[feature].values_.city,
+                  scale: 1.2,
+                  textBaseline: "bottom",
+                  offsetY: -5,
+                }),
+              })
+            );
+          }
+        }
+      });
+      this.map.addLayer(importedVectorLayer);
     },
   },
   watch: {
