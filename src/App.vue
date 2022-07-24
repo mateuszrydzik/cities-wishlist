@@ -2,7 +2,7 @@
   <v-app>
     <div id="app">
       <Toolbar :title="title" />
-      <router-view />
+      <router-view :key="$route.path" />
     </div>
   </v-app>
 </template>
@@ -17,9 +17,6 @@ export default {
   },
   data: () => ({
     title: "Cities Wishlist",
-    loggedIn: false,
-    username: "admin",
-    password: "admin",
   }),
 };
 </script>
@@ -37,5 +34,6 @@ body {
   width: 100%;
   top: 0;
   left: 0;
+  overflow: auto;
 }
 </style>
