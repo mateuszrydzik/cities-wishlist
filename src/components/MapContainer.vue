@@ -3,9 +3,10 @@
   <div id="modal" :city="city" :country="country" :notes="notes" ref="modal">
     {{ city }}, {{ country }} <br />
     <textarea id="input" v-model="notes" placeholder="notes"></textarea>
-    <v-btn size="small" color="green" @click="saveNotesToFeature()">
-      save notes</v-btn
-    >
+    <v-row align="center" justify="space-around">
+      <v-btn size="small" color="green" @click="postFeature()"> save</v-btn>
+      <v-btn size="small" color="red" @click="deleteFeature()"> delete</v-btn>
+    </v-row>
   </div>
   <ButtonAddCity />
   <ButtonImportCity />
@@ -25,6 +26,7 @@ import Overlay from "ol/Overlay";
 import { Style, Text, Fill, Stroke, Circle } from "ol/style";
 import "ol/ol.css";
 import GeoJSON from "ol/format/GeoJSON";
+import axios from "axios";
 
 export default {
   name: "MapContainer",
@@ -140,28 +142,25 @@ export default {
           }
           this.city = object.city;
           this.country = object.country;
-          this.currentId = feature.getId();
+          if (typeof object.id !== "undefined") {
+            this.currentId = object.id;
+          } else {
+            this.currentId = feature.getId();
+          }
           this.map.addOverlay(overlay);
           overlay.setPosition(coord);
+          console.log(object);
         }
       });
     },
-    saveNotesToFeature() {
-      const currentFeature = this.vectorLayer
-        .getSource()
-        .getFeatureById(this.currentId);
-      currentFeature.setProperties({
-        notes: this.notes,
-      });
-    },
-    importPlace() {
+    getFeatures() {
       const importedVectorLayer = new VectorLayer({
         source: new VectorSource({
           format: new GeoJSON({
-            dataProjection: "EPSG:3857",
-            featureProjection: "EPSG:4326",
+            dataProjection: "EPSG:4326",
+            featureProjection: "EPSG:3857",
           }),
-          url: "http://127.0.0.1:5000/place",
+          url: "http://127.0.0.1:5000/places",
         }),
       });
 
@@ -169,7 +168,6 @@ export default {
         const source = evt.target;
         if (source.getState() === "ready") {
           for (const feature in source.getFeatures()) {
-            // console.log(source.getFeatures()[feature].values_);
             source.getFeatures()[feature].setStyle(
               new Style({
                 image: new Circle({
@@ -194,6 +192,50 @@ export default {
         }
       });
       this.map.addLayer(importedVectorLayer);
+    },
+    postFeature() {
+      const currentFeature = this.vectorLayer
+        .getSource()
+        .getFeatureById(this.currentId);
+      currentFeature.setProperties({
+        notes: this.notes,
+      });
+      const properties = currentFeature.getProperties();
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      };
+      axios
+        .post(
+          "http://127.0.0.1:5000/places",
+          {
+            geom: {
+              type: "Point",
+              coordinates: transform(
+                currentFeature.getGeometry().getCoordinates(),
+                "EPSG:3857",
+                "EPSG:4326"
+              ),
+            },
+            city: properties.city,
+            country: properties.country,
+            notes: properties.notes,
+          },
+          config
+        )
+        .then((resp) => {
+          console.log(resp);
+        });
+    },
+    deleteFeature() {
+      axios
+        .delete(`http://127.0.0.1:5000/places/${this.currentId}`)
+        .then((resp) => {
+          console.log(resp);
+        })
+        .catch((error) => console.log(error));
     },
   },
   watch: {
