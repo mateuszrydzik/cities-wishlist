@@ -2,14 +2,20 @@
   <div id="map" ref="map-root" :style="{ cursor: $store.state.cursor }"></div>
   <div id="modal" :city="city" :country="country" :notes="notes" ref="modal">
     {{ city }}, {{ country }} <br />
-    <textarea id="input" v-model="notes" placeholder="notes"></textarea>
+    <v-textarea
+      v-model="notes"
+      label="Notes"
+      auto-grow
+      outlined
+      rows="1"
+    ></v-textarea>
     <v-row align="center" justify="space-around">
       <v-btn size="small" color="green" @click="postFeature()"> save</v-btn>
       <v-btn size="small" color="red" @click="deleteFeature()"> delete</v-btn>
     </v-row>
   </div>
   <ButtonAddCity />
-  <ButtonImportCity />
+  <!-- <ButtonImportCity /> -->
 </template>
 
 <script>
@@ -56,7 +62,13 @@ export default {
   methods: {
     addDrawInteraction() {
       this.vectorLayer = new VectorLayer({
-        source: new VectorSource(),
+        source: new VectorSource({
+          format: new GeoJSON({
+            dataProjection: "EPSG:4326",
+            featureProjection: "EPSG:3857",
+          }),
+          url: "http://127.0.0.1:5000/places",
+        }),
       });
       const draw = new Draw({
         type: "Point",
@@ -149,49 +161,55 @@ export default {
           }
           this.map.addOverlay(overlay);
           overlay.setPosition(coord);
-          console.log(object);
+          console.log(object.id);
         }
       });
     },
-    getFeatures() {
-      const importedVectorLayer = new VectorLayer({
-        source: new VectorSource({
-          format: new GeoJSON({
-            dataProjection: "EPSG:4326",
-            featureProjection: "EPSG:3857",
-          }),
-          url: "http://127.0.0.1:5000/places",
-        }),
-      });
+    // getAllFeatures() {
+    //   const importedVectorLayer = new VectorLayer({
+    //     source: new VectorSource({
+    //       format: new GeoJSON({
+    //         dataProjection: "EPSG:4326",
+    //         featureProjection: "EPSG:3857",
+    //       }),
+    //       url: "http://127.0.0.1:5000/places",
+    //     }),
+    //   });
 
-      importedVectorLayer.getSource().on("change", function (evt) {
-        const source = evt.target;
-        if (source.getState() === "ready") {
-          for (const feature in source.getFeatures()) {
-            source.getFeatures()[feature].setStyle(
-              new Style({
-                image: new Circle({
-                  stroke: new Stroke({
-                    color: "green",
-                  }),
-                  fill: new Fill({
-                    color: "green",
-                  }),
-                  radius: 5,
-                }),
-                text: new Text({
-                  font: "12px Trebuchet MS",
-                  text: source.getFeatures()[feature].values_.city,
-                  scale: 1.2,
-                  textBaseline: "bottom",
-                  offsetY: -5,
-                }),
-              })
-            );
-          }
-        }
-      });
-      this.map.addLayer(importedVectorLayer);
+    //   importedVectorLayer.getSource().on("change", function (evt) {
+    //     const source = evt.target;
+    //     if (source.getState() === "ready") {
+    //       for (const feature in source.getFeatures()) {
+    //         source.getFeatures()[feature].setStyle(
+    //           new Style({
+    //             image: new Circle({
+    //               stroke: new Stroke({
+    //                 color: "green",
+    //               }),
+    //               fill: new Fill({
+    //                 color: "green",
+    //               }),
+    //               radius: 5,
+    //             }),
+    //             text: new Text({
+    //               font: "12px Trebuchet MS",
+    //               text: source.getFeatures()[feature].values_.city,
+    //               scale: 1.2,
+    //               textBaseline: "bottom",
+    //               offsetY: -5,
+    //             }),
+    //           })
+    //         );
+    //       }
+    //     }
+    //   });
+    //   this.map.addLayer(importedVectorLayer);
+    // },
+    async getIDbyCity() {
+      const response = await axios.get(
+        `http://127.0.0.1:5000/places/${this.city}`
+      );
+      return response.data.id;
     },
     postFeature() {
       const currentFeature = this.vectorLayer
@@ -230,8 +248,14 @@ export default {
         });
     },
     deleteFeature() {
+      this.vectorLayer
+        .getSource()
+        .removeFeature(
+          this.vectorLayer.getSource().getFeatureById(this.currentId)
+        );
+      const current_city_id = this.getIDbyCity(this.city);
       axios
-        .delete(`http://127.0.0.1:5000/places/${this.currentId}`)
+        .delete(`http://127.0.0.1:5000/places/${current_city_id}`)
         .then((resp) => {
           console.log(resp);
         })
@@ -284,9 +308,7 @@ export default {
   left: -50px;
   min-width: 200px;
 }
-#input {
+.v-textarea input {
   font-size: small;
-  width: 150px;
-  height: 60px;
 }
 </style>
