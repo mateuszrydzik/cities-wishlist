@@ -1,7 +1,7 @@
 <template>
   <div id="button">
     <v-container>
-      <v-btn icon elevation="10" color="green" @click="emitImportPlace">
+      <v-btn icon elevation="10" color="green" @click="emitGetFeatures">
         {{ icon }}
       </v-btn>
     </v-container>
@@ -15,8 +15,8 @@ export default {
     icon: "pull",
   }),
   methods: {
-    emitImportPlace() {
-      this.$parent.importPlace();
+    emitGetFeatures() {
+      this.$parent.getFeatures();
     },
   },
 };
