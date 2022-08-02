@@ -27,4 +27,5 @@ coverage
 *.sln
 *.sw?
 
-/backend/config.py
+backend/configmodule.py
+backend/__pycache__/
