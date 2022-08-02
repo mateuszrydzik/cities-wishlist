@@ -3,13 +3,16 @@ from peewee import PostgresqlDatabase, Model, PrimaryKeyField, TextField, Field
 
 database = PostgresqlDatabase(None)
 
+
 class GeometryField(Field):
     field_type = 'geometry'
     db_field = 'geometry'
 
+
 class AbstractModel(Model):
     class Meta:
         database = database
+
 
 class User(AbstractModel):
     id = PrimaryKeyField()
@@ -18,6 +21,7 @@ class User(AbstractModel):
 
     class Meta:
         db_table = 'user'
+
 
 class Place(AbstractModel):
     id = PrimaryKeyField()
