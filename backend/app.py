@@ -29,7 +29,7 @@ def login():
 
 
 @app.route('/places', methods=['GET'])
-def get_place():
+def get_places():
     places = Place.select(
         fn.ST_AsGeoJSON(Place.geom).alias('geom'),
         Place
@@ -48,6 +48,15 @@ def get_place():
     })
 
 
+@app.route('/places/<string:city>', methods=['GET'])
+def get_place_by_name(city):
+    if (place := Place.get_or_none(Place.city == city)) is None:
+        return {"message": "Place not found"}, 404
+    else:
+        place_id = place.id
+        return {"id": place_id}, 200
+
+
 @app.route('/places', methods=['POST'])
 def add_place():
     req = request.json
@@ -57,13 +66,13 @@ def add_place():
     return {"status": "added"}
 
 
-@app.route('/places/<int:point_id>', methods=['DELETE'])
-def delete_place(point_id):
-    if (point := Place.get_or_none(Place.id == point_id)) is None:
-        return {"message": "Point not found"}
+@app.route('/places/<int:place_id>', methods=['DELETE'])
+def delete_place(place_id):
+    if (place := Place.get_or_none(Place.id == place_id)) is None:
+        return {"message": "Place not found"}, 404
     else:
-        point.delete_instance()
-        return {"message": "Point removed"}
+        place.delete_instance()
+        return {"message": "Place removed"}, 200
 
 
 if __name__ == '__main__':
