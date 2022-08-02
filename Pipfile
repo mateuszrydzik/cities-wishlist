@@ -8,8 +8,9 @@ flask = "*"
 peewee = "*"
 psycopg2 = "*"
 flask-cors = "*"
+shapely = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.10"
+python_version = "3.9"
