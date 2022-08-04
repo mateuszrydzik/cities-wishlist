@@ -38,6 +38,7 @@ export default {
   data: () => ({
     active: false,
     vectorLayer: undefined,
+    importedVectorLayer: undefined,
     map: undefined,
     city: undefined,
     country: undefined,
@@ -154,7 +155,7 @@ export default {
       });
     },
     getFeatures() {
-      const importedVectorLayer = new VectorLayer({
+      this.importedVectorLayer = new VectorLayer({
         source: new VectorSource({
           format: new GeoJSON({
             dataProjection: "EPSG:4326",
@@ -164,7 +165,7 @@ export default {
         }),
       });
 
-      importedVectorLayer.getSource().on("change", function (evt) {
+      this.importedVectorLayer.getSource().on("change", function (evt) {
         const source = evt.target;
         if (source.getState() === "ready") {
           for (const feature in source.getFeatures()) {
@@ -191,7 +192,7 @@ export default {
           }
         }
       });
-      this.map.addLayer(importedVectorLayer);
+      this.map.addLayer(this.importedVectorLayer);
     },
     postFeature() {
       const currentFeature = this.vectorLayer
@@ -236,6 +237,8 @@ export default {
           console.log(resp);
         })
         .catch((error) => console.log(error));
+      this.vectorLayer.getSource().refresh();
+      this.importedVectorLayer.getSource().refresh();
     },
   },
   watch: {
