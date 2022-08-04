@@ -30,3 +30,5 @@ coverage
 backend/configmodule.py
 backend/__pycache__/*.pyc
 backend/__pycache__/models.cpython-310.pyc
+.env
+backend/docker
