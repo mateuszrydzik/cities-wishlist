@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  api:
+    build: ./backend
+    command: python app.py
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/api
