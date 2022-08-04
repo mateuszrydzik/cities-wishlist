@@ -1,0 +1,5 @@
+flask
+peewee
+psycopg2
+flask-cors
+shapely
