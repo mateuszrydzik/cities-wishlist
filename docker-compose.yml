@@ -1,9 +1,24 @@
 version: "3.9"
 services:
-  api:
-    build: ./backend
-    command: python app.py
+  db:
+    container_name: ${CONTAINER_NAME}_db
+    image: kartoza/postgis:14-3.3
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DBNAME=${POSTGRES_DBNAME}
+    volumes:
+      - ./backend/docker/database:/var/lib/postgresql
     ports:
-      - "5000:5000"
+      - "${DB_PORT}:5432"
+
+  api:
+    container_name: ${CONTAINER_NAME}_api
+    build: ./backend
+    command: python run.py
     volumes:
       - ./backend:/api
+    ports:
+      - "${API_PORT}:5000"
+    depends_on:
+      - "db"
