@@ -27,8 +27,7 @@ coverage
 *.sln
 *.sw?
 
-backend/configmodule.py
-backend/__pycache__/*.pyc
-backend/__pycache__/models.cpython-310.pyc
-.env
-backend/docker
+backend/api/__pycache__/*.pyc
+backend/api/__pycache__/models.cpython-310.pyc
+backend/.env
+backend/docker/database
