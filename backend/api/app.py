@@ -1,12 +1,11 @@
 from flask_cors import CORS
-from flask import Flask, render_template, jsonify, request
-from flask_cors import cross_origin
-from models import User, Place
-from configmodule import TestingConfig
+from flask import Flask, render_template, request
 from peewee import fn
 from shapely.geometry import shape
 import json
-from config import create_db, create_tables
+
+from api.models import User, Place
+from api.config import create_db, create_tables, TestingConfig
 
 
 def create_app() -> Flask:
