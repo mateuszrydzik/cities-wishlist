@@ -8,17 +8,17 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DBNAME=${POSTGRES_DBNAME}
     volumes:
-      - ./backend/docker/database:/var/lib/postgresql
+      - ./docker/database:/var/lib/postgresql/data
     ports:
       - "${DB_PORT}:5432"
 
   api:
     container_name: ${CONTAINER_NAME}_api
-    build: ./backend
-    command: python run.py
+    build: ./docker/api
+    command: sh -c "./run_api.sh"
     volumes:
-      - ./backend:/api
+      - ./api/:/app/api
+      - ./run.py:/app/run.py
+      - ./.env:/.env
     ports:
       - "${API_PORT}:5000"
-    depends_on:
-      - "db"
