@@ -32,4 +32,4 @@ models = [User, Place]
 
 def create_tables(database):
     for model in models:
-        model.create_table
+        model.create_table()
