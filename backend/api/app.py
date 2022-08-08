@@ -20,6 +20,16 @@ def create_app() -> Flask:
     def login():
         return render_template('login.html')
 
+    @app.route('/status')
+    def status():
+        if (point := Place.get_or_none(1)) is None:
+            return {"message": "Error"}, 404
+        else:
+            return {"message": "Connected"}, 200
+        # query = User.select()
+        # if query.exists():
+        #     return {'Message': "healthy"}, 200
+
     @app.route('/places', methods=['GET'])
     def get_place():
         places = Place.select(
