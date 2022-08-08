@@ -11,6 +11,12 @@ services:
       - ./docker/database:/var/lib/postgresql/data
     ports:
       - "${DB_PORT}:5432"
+    restart: always
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-h", "cw_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   api:
     container_name: ${CONTAINER_NAME}_api
@@ -22,3 +28,10 @@ services:
       - ./.env:/.env
     ports:
       - "${API_PORT}:5000"
+    restart: always
+    healthcheck:
+      test:
+        ["CMD", "curl", "-I", "--fail", "http://http://171.19.0.1:5000/status"]
+      interval: 30s
+      timeout: 3s
+      retries: 5
