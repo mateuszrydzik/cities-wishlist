@@ -30,4 +30,4 @@ coverage
 backend/api/__pycache__/*.pyc
 backend/api/__pycache__/models.cpython-310.pyc
 backend/.env
-backend/docker/database
+backend/docker/database/postgres-data
