@@ -23,12 +23,9 @@ def create_app() -> Flask:
     @app.route('/status')
     def status():
         if (point := Place.get_or_none(1)) is None:
-            return {"message": "Error"}, 404
+            return {"message": "Not connected"}, 404
         else:
             return {"message": "Connected"}, 200
-        # query = User.select()
-        # if query.exists():
-        #     return {'Message': "healthy"}, 200
 
     @app.route('/places', methods=['GET'])
     def get_place():
