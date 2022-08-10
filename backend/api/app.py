@@ -4,7 +4,7 @@ from peewee import fn
 from shapely.geometry import shape
 import json
 
-from api.models import User, Place
+from api.models import Place
 from api.config import create_db, create_tables, TestingConfig
 
 
