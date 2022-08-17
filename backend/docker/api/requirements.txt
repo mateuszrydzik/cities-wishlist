@@ -1,5 +1,5 @@
-flask
-peewee
-psycopg2
-flask-cors
-shapely
+Flask==2.2.2
+Flask-Cors==3.0.10
+peewee==3.15.1
+psycopg2==2.9.3
+Shapely==1.8.2
