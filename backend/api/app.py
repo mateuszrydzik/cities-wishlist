@@ -1,3 +1,4 @@
+from operator import truediv
 from flask_cors import CORS
 from flask import Flask, render_template, request
 from peewee import fn
@@ -28,7 +29,7 @@ def create_app() -> Flask:
             return {"message": "Connected"}, 200
 
     @app.route('/places', methods=['GET'])
-    def get_place():
+    def get_places():
         places = Place.select(
             fn.ST_AsGeoJSON(Place.geom).alias('geom'),
             Place
@@ -46,6 +47,13 @@ def create_app() -> Flask:
             "features": features
         }
 
+    @app.route('/places/<int:place_id>', methods=['GET'])
+    def get_place(place_id):
+        if (place := Place.get_or_none(Place.id == place_id)) is None:
+            return {"message": "Point not found"}, 404
+        else:
+            return {"message": "found"}, 200
+
     @app.route('/places', methods=['POST'])
     def add_place():
         req = request.json
@@ -54,6 +62,7 @@ def create_app() -> Flask:
                      notes=req['notes'], geom=geometry)
         return {"status": "added"}, 201
 
+    @app.route('/places/<int:place_id>', methods=['PUT'])
     @app.route('/places/<int:point_id>', methods=['DELETE'])
     def delete_place(point_id):
         if (point := Place.get_or_none(Place.id == point_id)) is None:
