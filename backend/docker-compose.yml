@@ -38,4 +38,6 @@ services:
     build: ./docker/nginx
     restart: always
     ports:
-      - "8080:80"
+      - "${NGINX_PORT}:80"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
