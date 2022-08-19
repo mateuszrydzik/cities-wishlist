@@ -1,19 +1,23 @@
-# cities-wishlist
+# Cities wishlist
 
 Web app for travel planning
 
 ## Setup
-### Application 
+### Create .env file containing:
 ```sh
-npm run dev
+CONTAINER_NAME=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DBNAME=
+DB_PORT=
+NGINX_PORT=
+SECRET_KEY=
 ```
-### API
+### Run Docker containers
 ```sh
-cd backend
-python app.py
+docker compose up 
 ```
-## To-do
-
-1. wstawianie utworzonych w aplikacji punktów do tabeli
-2. dodać nazwy miasta jako style text dla importowanych punktów z tabeli (obecnie tylko pierwszy punkt jest poprawnie formatowany)
-3. autoryzacja - po zalogowaniu user ma dostęp do zapisanych przez siebie punktów
+if it's the first time, run
+```sh
+docker compose up --build
+```
