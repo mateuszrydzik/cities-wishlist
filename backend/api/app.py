@@ -74,7 +74,7 @@ def create_app() -> Flask:
         else:
             place.notes = "updated!"
             place.save()
-            return {"message": "Place updated"}, 200
+            return {"message": "Place updated"}, 204
 
     @app.route('/places/<int:place_id>', methods=['DELETE'])
     def delete_place(place_id):
