@@ -23,7 +23,7 @@ def create_app() -> Flask:
 
     @app.route('/status')
     def status():
-        if (point := Place.get_or_none(1)) is None:
+        if (place := Place.get_or_none()) is None:
             return {"message": "Not connected"}, 404
         else:
             return {"message": "Connected"}, 200
@@ -47,13 +47,6 @@ def create_app() -> Flask:
             "features": features
         }
 
-    @app.route('/places/<int:place_id>', methods=['GET'])
-    def get_place(place_id):
-        if (place := Place.get_or_none(Place.id == place_id)) is None:
-            return {"message": "Point not found"}, 404
-        else:
-            return {"message": "found"}, 200
-
     @app.route('/places', methods=['POST'])
     def add_place():
         req = request.json
@@ -62,13 +55,33 @@ def create_app() -> Flask:
                      notes=req['notes'], geom=geometry)
         return {"status": "added"}, 201
 
-    @app.route('/places/<int:place_id>', methods=['PUT'])
-    @app.route('/places/<int:point_id>', methods=['DELETE'])
-    def delete_place(point_id):
-        if (point := Place.get_or_none(Place.id == point_id)) is None:
-            return {"message": "Point not found"}, 404
+    @app.route('/places/<int:place_id>', methods=['GET'])
+    def get_place(place_id):
+        if (Place.get_or_none(Place.id == place_id)) is None:
+            return {"message": "Place not found"}, 404
         else:
-            point.delete_instance()
-            return {"message": "Point removed"}, 200
+            one = Place.select(fn.ST_AsGeoJSON(Place.geom).alias('geom'), Place
+                               ).where(Place.id == place_id).dicts().get()
+
+            return {"type": "Feature",
+                    "geometry": json.loads(one.pop('geom')),
+                    "properties": one}, 200
+
+    @app.route('/places/<int:place_id>', methods=['PUT'])
+    def update_place(place_id):
+        if (place := Place.get_or_none(Place.id == place_id)) is None:
+            return {"message": "Place not found"}, 404
+        else:
+            place.notes = "updated!"
+            place.save()
+            return {"message": "Place updated"}, 200
+
+    @app.route('/places/<int:place_id>', methods=['DELETE'])
+    def delete_place(place_id):
+        if (place := Place.get_or_none(Place.id == place_id)) is None:
+            return {"message": "Place not found"}, 404
+        else:
+            place.delete_instance()
+            return {"message": "Place removed"}, 200
 
     return app
