@@ -26,7 +26,7 @@ coverage
 *.njsproj
 *.sln
 *.sw?
-
+.env
 backend/api/__pycache__/*.pyc
 backend/api/__pycache__/models.cpython-310.pyc
 backend/.env
