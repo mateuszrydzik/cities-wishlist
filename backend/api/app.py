@@ -17,13 +17,9 @@ def create_app() -> Flask:
     app.db = create_db(app.config)
     create_tables(app.db)
 
-    @app.route('/login')
-    def login():
-        return render_template('login.html')
-
     @app.route('/status')
     def status():
-        if (place := Place.get_or_none()) is None:
+        if (Place.get_or_none()) is None:
             return {"message": "Not connected"}, 404
         else:
             return {"message": "Connected"}, 200
@@ -72,7 +68,7 @@ def create_app() -> Flask:
         if (place := Place.get_or_none(Place.id == place_id)) is None:
             return {"message": "Place not found"}, 404
         else:
-            place.notes = "updated!"
+            place.notes = request.args.get('notes')
             place.save()
             return {"message": "Place updated"}, 204
 
