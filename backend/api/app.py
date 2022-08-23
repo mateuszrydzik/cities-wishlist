@@ -1,6 +1,7 @@
 from operator import truediv
 from flask_cors import CORS
 from flask import Flask, render_template, request
+from flasgger import Swagger
 from peewee import fn
 from shapely.geometry import shape
 import json
@@ -14,15 +15,16 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object(TestingConfig())
     CORS(app)
-    app.db = create_db(app.config)
-    create_tables(app.db)
+    app._db = create_db(app.config)
+    create_tables(app._db)
+    app._swagger = Swagger(app)
 
     @app.route('/status')
     def status():
         if (Place.get_or_none()) is None:
             return {"message": "Not connected"}, 404
         else:
-            return {"message": "Connected"}, 200
+            return {"message": "Connected"}
 
     @app.route('/places', methods=['GET'])
     def get_places():
@@ -56,12 +58,21 @@ def create_app() -> Flask:
         if (Place.get_or_none(Place.id == place_id)) is None:
             return {"message": "Place not found"}, 404
         else:
-            one = Place.select(fn.ST_AsGeoJSON(Place.geom).alias('geom'), Place
-                               ).where(Place.id == place_id).dicts().get()
+            one = Place \
+                .select(
+                    fn.ST_AsGeoJSON(Place.geom).alias('geom'), Place
+                ) \
+                .where(
+                    Place.id == place_id
+                ) \
+                .dicts() \
+                .get()
 
-            return {"type": "Feature",
-                    "geometry": json.loads(one.pop('geom')),
-                    "properties": one}, 200
+            return {
+                "type": "Feature",
+                "geometry": json.loads(one.pop('geom')),
+                "properties": one
+            }
 
     @app.route('/places/<int:place_id>', methods=['PUT'])
     def update_place(place_id):
@@ -70,7 +81,7 @@ def create_app() -> Flask:
         else:
             place.notes = request.args.get('notes')
             place.save()
-            return {"message": "Place updated"}, 204
+            return {"message": "Place updated"}
 
     @app.route('/places/<int:place_id>', methods=['DELETE'])
     def delete_place(place_id):
@@ -78,6 +89,6 @@ def create_app() -> Flask:
             return {"message": "Place not found"}, 404
         else:
             place.delete_instance()
-            return {"message": "Place removed"}, 200
+            return {"message": "Place removed"}
 
     return app
