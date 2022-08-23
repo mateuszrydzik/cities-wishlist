@@ -30,6 +30,6 @@
                   properties:
                     name:
                       type: string
-                      example: "Stargard:
+                      example: "Stargard"
           404:
             description: Place not found
