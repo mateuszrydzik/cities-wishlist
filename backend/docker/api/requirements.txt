@@ -3,3 +3,4 @@ Flask-Cors==3.0.10
 peewee==3.15.1
 psycopg2==2.9.3
 Shapely==1.8.2
+flasgger==0.9.5
