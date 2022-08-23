@@ -1,0 +1,35 @@
+        Find place by id
+        ---
+        description: Returns a single place
+        parameters:
+         - name: place_id
+           in: path
+           required: true
+           schema:
+             type: integer
+        responses:
+          200:
+           description:
+           schema:
+             type: object
+             properties:
+               type:
+                 type: string
+                 example: "Feature"
+                geometry:
+                  type: object
+                  properties:
+                    geometry:
+                      type: array
+                      example: [15.0112321, 52.4108921]
+                    type:
+                      type: string
+                      example: "Point"
+                properties:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: "Stargard:
+          404:
+            description: Place not found
