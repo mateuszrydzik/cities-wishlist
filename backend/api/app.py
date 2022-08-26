@@ -21,8 +21,7 @@ def create_app() -> Flask:
             "termsOfService": "http://me.com/terms",
             "version": "0.0.1"
         },
-        "host": "mysite.com",  # overrides localhost:500
-        "basePath": "/docs",  # base bash for blueprint registration
+        "basePath": "/",  # base bash for blueprint registration
         "schemes": [
             "http",
             "https"
@@ -35,14 +34,13 @@ def create_app() -> Flask:
         ],
         "specs": [
             {
-                "endpoint": 'docs',
-                "route": '/docs.json',
+                "endpoint": '',
+                "route": '/docs/api.json',
                 "rule_filter": lambda rule: True,  # all in
                 "model_filter": lambda tag: True,  # all in
             }
         ],
         "static_url_path": "/flasgger_static",
-        # "static_folder": "static",  # must be set by user
         "swagger_ui": True,
         "specs_route": "/docs"
     }
