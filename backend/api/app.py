@@ -34,15 +34,15 @@ def create_app() -> Flask:
         ],
         "specs": [
             {
-                "endpoint": '',
-                "route": '/docs/api.json',
+                "endpoint": 'apispec_1',
+                "route": '/apispec_1.json',
                 "rule_filter": lambda rule: True,  # all in
                 "model_filter": lambda tag: True,  # all in
             }
         ],
         "static_url_path": "/flasgger_static",
         "swagger_ui": True,
-        "specs_route": "/docs"
+        "specs_route": "/apidocs/"
     }
     app = Flask(__name__)
     app.config.from_object(TestingConfig())
