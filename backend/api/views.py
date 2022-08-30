@@ -42,7 +42,8 @@ class ItemAPI(MethodView):
             return {"message": "Not found"}
         else:
             place = self.model.select(
-                fn.ST_AsGeoJSON(self.model.geom).alias('geom'), self.model
+                fn.ST_AsGeoJSON(self.model.geom).alias('geom'),
+                self.model
             ).where(
                 self.model.id == id
             ).dicts().get()
@@ -77,7 +78,8 @@ class GroupAPI(MethodView):
 
     def get(self):
         places = self.model.select(
-            fn.ST_AsGeoJSON(self.model.geom).alias('geom'), self.model
+            fn.ST_AsGeoJSON(self.model.geom).alias('geom'),
+            self.model
         ).dicts()
         features = []
         for row in places:
