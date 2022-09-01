@@ -4,6 +4,7 @@ from peewee import fn
 from shapely.geometry import shape
 import json
 from api.models import Place
+from flasgger import swag_from
 
 
 def class_route(self, rule, endpoint, model):
@@ -30,22 +31,23 @@ class StatusView(View):
             return {"message": "Connected"}
 
 
-@class_route(places_bp, "/places/<int:id>", "places-item", Place)
+@class_route(places_bp, "/places/<int:place_id>", "places-item", Place)
 class ItemAPI(MethodView):
     init_every_request = False
 
     def __init__(self, model):
         self.model = model
 
-    def get(self, id):
-        if (self.model.get_or_none(self.model.id == id)) is None:
+    @swag_from('get_place_id.yml')
+    def get(self, place_id):
+        if (self.model.get_or_none(self.model.id == place_id)) is None:
             return {"message": "Not found"}
         else:
             place = self.model.select(
                 fn.ST_AsGeoJSON(self.model.geom).alias('geom'),
                 self.model
             ).where(
-                self.model.id == id
+                self.model.id == place_id
             ).dicts().get()
         return {
             "type": "Feature",
@@ -76,6 +78,7 @@ class GroupAPI(MethodView):
     def __init__(self, model):
         self.model = model
 
+    @swag_from('get_places.yml')
     def get(self):
         places = self.model.select(
             fn.ST_AsGeoJSON(self.model.geom).alias('geom'),
