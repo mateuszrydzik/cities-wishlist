@@ -27,17 +27,19 @@ services:
       - ./backend/run.py:/app/run.py
       - ./.env:/.env
     restart: always
+    ports:
+      - "${NGINX_PORT}:80"
     healthcheck:
       test: ["CMD", "curl", "-I", "--fail", "http://127.0.0.1:80/api/status"]
       interval: 30s
       timeout: 3s
       retries: 5
 
-  nginx:
-    container_name: ${CONTAINER_NAME}_nginx
-    build: ./frontend
-    restart: always
-    ports:
-      - "${NGINX_PORT}:80"
-    volumes:
-      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf
+  # nginx:
+  #   container_name: ${CONTAINER_NAME}_nginx
+  #   build: ./frontend
+  #   restart: always
+  #   ports:
+  #     - "${NGINX_PORT}:80"
+  #   volumes:
+  #     - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf
