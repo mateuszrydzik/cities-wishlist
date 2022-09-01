@@ -10,7 +10,7 @@ def create_app() -> Flask:
     template = {
         "swagger": "2.0",
         "info": {
-            "title": "My API",
+            "title": "Cities wishlist API",
             "description": "API for my data",
             "contact": {
                 "responsibleOrganization": "ME",
