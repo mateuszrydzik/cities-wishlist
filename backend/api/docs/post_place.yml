@@ -1,0 +1,35 @@
+Post a new Place
+---
+description: Create a new Place
+
+content: application/json
+
+requestBody:
+  description: A Place to create
+  content:
+    application/json:
+      schema:
+        $ref: "#/components/schemas/Place"
+
+response:
+  200:
+    description: Place added
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/Pet"
+
+components:
+  schemas:
+    Place:
+      type: object
+      properties:
+        city:
+          type: string
+          example: Stargard
+        country:
+          type: string
+          example: Poland
+        notes:
+          type: string
+          example: aaaaha
