@@ -38,7 +38,7 @@ class ItemAPI(MethodView):
     def __init__(self, model):
         self.model = model
 
-    @swag_from('get_place_id.yml')
+    @swag_from('docs/get_place_id.yml')
     def get(self, place_id):
         if (self.model.get_or_none(self.model.id == place_id)) is None:
             return {"message": "Not found"}
@@ -55,17 +55,21 @@ class ItemAPI(MethodView):
             "properties": place
         }
 
-    def put(self, id):
-        if (place := self.model.get_or_none(self.model.id == id)) is None:
+    @swag_from('docs/put_place.yml')
+    def put(self, place_id):
+        if (place := self.model.get_or_none(
+                self.model.id == place_id)) is None:
             return {"message": "Not found"}, 404
         else:
             place.notes = request.args.get('notes')
             place.save()
             return {"message": "Updated"}
 
-    def delete(self, id):
-        if (place := self.model.get_or_none(self.model.id == id)) is None:
-            return {"message": "Not found"}, 404
+    @swag_from('docs/delete_place.yml')
+    def delete(self, place_id):
+        if (place := self.model.get_or_none(
+                self.model.id == place_id)) is None:
+            return {"message": "Place not found"}, 404
         else:
             place.delete_instance()
             return {"message": "Removed"}
@@ -78,7 +82,7 @@ class GroupAPI(MethodView):
     def __init__(self, model):
         self.model = model
 
-    @swag_from('get_places.yml')
+    @swag_from('docs/get_places.yml')
     def get(self):
         places = self.model.select(
             fn.ST_AsGeoJSON(self.model.geom).alias('geom'),
@@ -97,6 +101,7 @@ class GroupAPI(MethodView):
             "features": features
         }
 
+    @swag_from('docs/post_place.yml')
     def post(self):
         req = request.json
         geom = 'SRID=4326;{}'.format(shape(req['geom']).wkt)
@@ -106,4 +111,4 @@ class GroupAPI(MethodView):
             notes=req['notes'],
             geom=geom
         )
-        return {"message": "Added"}
+        return {"message": "Place added"}
