@@ -1,0 +1,17 @@
+Removes place
+---
+description: Removes single place by it's ID
+
+parameters:
+  - in: path
+    name: place_id
+    required: true
+    example: 27
+    schema:
+      type: int
+
+responses:
+  200:
+    description: Removed
+  404:
+    description: Place not found
