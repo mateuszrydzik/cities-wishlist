@@ -4,32 +4,32 @@ description: Create a new Place
 
 content: application/json
 
-requestBody:
-  description: A Place to create
-  content:
-    application/json:
-      schema:
-        $ref: "#/components/schemas/Place"
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        geom:
+          type: object
+          properties:
+            type:
+              type: string
+              example: "Point"
+            coordinates:
+              type: array
+              example: [-2.961425, 53.430759]
+        city:
+          type: string
+          example: Liverpool
+        country:
+          type: string
+          example: England
+        notes:
+          type: string
+          example: six times
 
 response:
   200:
     description: Place added
-    content:
-      application/json:
-        schema:
-          $ref: "#/components/schemas/Pet"
-
-components:
-  schemas:
-    Place:
-      type: object
-      properties:
-        city:
-          type: string
-          example: Stargard
-        country:
-          type: string
-          example: Poland
-        notes:
-          type: string
-          example: aaaaha
