@@ -24,6 +24,7 @@ class StatusView(View):
     def __init__(self, model):
         self.model = model
 
+    @swag_from('docs/status.yml')
     def dispatch_request(self):
         if (self.model.get_or_none()) is None:
             return {"message": "Not connected"}, 404
