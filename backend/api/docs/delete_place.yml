@@ -2,6 +2,9 @@ Removes place
 ---
 description: Removes single place by it's ID
 
+tags:
+  - Place
+
 parameters:
   - in: path
     name: place_id

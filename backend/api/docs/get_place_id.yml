@@ -2,6 +2,9 @@ Find place by id
 ---
 description: Returns a single place, selected by it's ID
 
+tags:
+  - Place
+
 parameters:
   - in: path
     name: place_id

@@ -2,7 +2,8 @@ Post a new Place
 ---
 description: Create a new Place
 
-content: application/json
+tags:
+  - Place
 
 parameters:
   - in: body
