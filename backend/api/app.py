@@ -1,11 +1,11 @@
 from flask_cors import CORS
 from flask import Flask
 from flasgger import Swagger
-from api.config import create_db, create_tables, TestingConfig
+from api.config import create_db, create_tables, Config, TestingConfig
 from api.views import places_bp
 
 
-def create_app() -> Flask:
+def create_app(config) -> Flask:
 
     template = {
         "swagger": "2.0",
@@ -45,7 +45,7 @@ def create_app() -> Flask:
         "specs_route": "/api/docs"
     }
     app = Flask(__name__)
-    app.config.from_object(TestingConfig())
+    app.config.from_object(load_config(config))
     CORS(app)
     app._db = create_db(app.config)
     create_tables(app._db)
@@ -53,3 +53,10 @@ def create_app() -> Flask:
     app.register_blueprint(places_bp, url_prefix='/api')
 
     return app
+
+
+def load_config(config):
+    if config == 'production':
+        return Config
+    elif config == 'testing':
+        return TestingConfig
