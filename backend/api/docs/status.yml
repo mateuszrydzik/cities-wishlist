@@ -1,0 +1,12 @@
+Checks API status
+---
+description: Checks if API is connected with the database
+
+tags:
+  - Status
+
+responses:
+  200:
+    description: Connected
+  404:
+    description: Not connected
