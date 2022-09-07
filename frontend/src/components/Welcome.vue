@@ -26,7 +26,9 @@
           text="Mark your travel destination on the map with a single click. It's
             name will be automatically saved."
         >
-        </v-card> </v-col></v-row
+        </v-card>
+      </v-col>
+      <v-img src="selection.png"></v-img></v-row
     ><v-row
       ><v-col>
         <v-card
