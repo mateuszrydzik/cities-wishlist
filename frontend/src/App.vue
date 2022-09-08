@@ -1,20 +1,15 @@
 <template>
   <v-app>
     <div id="app">
-      <Toolbar :title="title" />
       <router-view :key="$route.path" />
     </div>
   </v-app>
 </template>
 
 <script>
-import Toolbar from "./components/Toolbar.vue";
-
 export default {
   name: "App",
-  components: {
-    Toolbar,
-  },
+  components: {},
   data: () => ({
     title: "Cities Wishlist",
   }),
