@@ -1,4 +1,5 @@
 <template>
+  <Toolbar />
   <div id="map" ref="map-root" :style="{ cursor: $store.state.cursor }"></div>
   <div id="modal" :city="city" :country="country" :notes="notes" ref="modal">
     {{ city }}, {{ country }} <br />
@@ -16,6 +17,7 @@
 import Modal from "./Modal.vue";
 import ButtonAddCity from "./ButtonAddCity.vue";
 import ButtonImportCity from "./ButtonImportCity.vue";
+import Toolbar from "./Toolbar.vue";
 import View from "ol/View";
 import Map from "ol/Map";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
@@ -34,6 +36,7 @@ export default {
     Modal,
     ButtonAddCity,
     ButtonImportCity,
+    Toolbar,
   },
   data: () => ({
     active: false,
