@@ -1,4 +1,5 @@
 <template>
+  <Appbar />
   <v-container>
     <h1 class="tagline">
       Find all the <span>cities</span> you ever <span>wished</span> to visit
@@ -10,27 +11,32 @@
       <v-btn
         :rounded="0"
         min-width="300px"
+        min-height="60px"
         variant="outlined"
         color="green"
         @click="App()"
         >launch app</v-btn
       ></v-card-actions
     >
-    <v-row>
+    <v-row align="center" justify="center">
       <v-col>
         <v-card
           min-height="150px"
           variant="outlined"
           color="green"
           title="Select"
-          text="Mark your travel destination on the map with a single click. It's
-            name will be automatically saved."
+          text="Mark your travel destination on the map with a single click. City's name will be automatically saved!"
         >
         </v-card>
       </v-col>
-      <v-img src="selection.png"></v-img></v-row
-    ><v-row
-      ><v-col>
+      <v-col
+        ><v-img max-height="100px" src="./selection.png"></v-img
+      ></v-col> </v-row
+    ><v-row align="center" justify="center">
+      <v-col>
+        <v-img max-height="100px" src="./edit.png"></v-img>
+      </v-col>
+      <v-col>
         <v-card
           min-height="150px"
           variant="outlined"
@@ -40,7 +46,7 @@
         >
         </v-card></v-col
     ></v-row>
-    <v-row
+    <v-row align="center" justify="center"
       ><v-col>
         <v-card
           min-height="150px"
@@ -52,17 +58,22 @@
         >
         </v-card
       ></v-col>
+      <v-col>
+        <v-img max-height="100px" src="./edit.png"></v-img>
+      </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import Appbar from "./Appbar.vue";
+
 export default {
   name: "Welcome",
+  components: {
+    Appbar,
+  },
   methods: {
-    Login() {
-      this.$router.push("/login");
-    },
     App() {
       this.$router.push("/app");
     },
@@ -86,5 +97,8 @@ export default {
 }
 span {
   color: green;
+}
+.v-container {
+  margin-top: 60px;
 }
 </style>
