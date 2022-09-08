@@ -1,6 +1,6 @@
 <template>
   <v-toolbar app light color="green" height="60px">
-    <v-toolbar-title>{{ title }}</v-toolbar-title>
+    <v-toolbar-title>Cities Wishlist</v-toolbar-title>
   </v-toolbar>
 </template>
 
