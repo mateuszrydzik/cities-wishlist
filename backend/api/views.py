@@ -106,6 +106,13 @@ class GroupAPI(MethodView):
     def post(self):
         req = request.json
         geom = 'SRID=4326;{}'.format(shape(req['geom']).wkt)
+        # place = self.model
+        # place.city = req['city']
+        # place.country = req['country']
+        # place.notes = req['notes']
+        # place.geom = req['geom']
+        # place.save()
+        # id = place.id
         self.model.create(
             city=req['city'],
             country=req['country'],
