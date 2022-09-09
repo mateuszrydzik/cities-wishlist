@@ -10,13 +10,11 @@
     </v-row>
   </div>
   <ButtonAddCity />
-  <ButtonImportCity />
 </template>
 
 <script>
 import Modal from "./Modal.vue";
 import ButtonAddCity from "./ButtonAddCity.vue";
-import ButtonImportCity from "./ButtonImportCity.vue";
 import Toolbar from "./Toolbar.vue";
 import View from "ol/View";
 import Map from "ol/Map";
@@ -35,13 +33,11 @@ export default {
   components: {
     Modal,
     ButtonAddCity,
-    ButtonImportCity,
     Toolbar,
   },
   data: () => ({
     active: false,
     vectorLayer: undefined,
-    importedVectorLayer: undefined,
     map: undefined,
     city: undefined,
     country: undefined,
@@ -59,8 +55,35 @@ export default {
   },
   methods: {
     addDrawInteraction() {
+      let style = new Style({
+        image: new Circle({
+          stroke: new Stroke({
+            color: "green",
+          }),
+          fill: new Fill({
+            color: "green",
+          }),
+          radius: 5,
+        }),
+        text: new Text({
+          font: "12px Trebuchet MS",
+          scale: 1.2,
+          textBaseline: "bottom",
+          offsetY: -5,
+        }),
+      });
       this.vectorLayer = new VectorLayer({
-        source: new VectorSource(),
+        source: new VectorSource({
+          format: new GeoJSON({
+            dataProjection: "EPSG:4326",
+            featureProjection: "EPSG:3857",
+          }),
+          url: "http://127.0.0.1:8080/api/places",
+        }),
+        style: function (feature) {
+          style.getText().setText(feature.get("city"));
+          return style;
+        },
       });
       const draw = new Draw({
         type: "Point",
@@ -153,49 +176,8 @@ export default {
           }
           this.map.addOverlay(overlay);
           overlay.setPosition(coord);
-          console.log(object);
         }
       });
-    },
-    getFeatures() {
-      this.importedVectorLayer = new VectorLayer({
-        source: new VectorSource({
-          format: new GeoJSON({
-            dataProjection: "EPSG:4326",
-            featureProjection: "EPSG:3857",
-          }),
-          url: "http://127.0.0.1:8080/api/places",
-        }),
-      });
-
-      this.importedVectorLayer.getSource().on("change", function (evt) {
-        const source = evt.target;
-        if (source.getState() === "ready") {
-          for (const feature in source.getFeatures()) {
-            source.getFeatures()[feature].setStyle(
-              new Style({
-                image: new Circle({
-                  stroke: new Stroke({
-                    color: "green",
-                  }),
-                  fill: new Fill({
-                    color: "green",
-                  }),
-                  radius: 5,
-                }),
-                text: new Text({
-                  font: "12px Trebuchet MS",
-                  text: source.getFeatures()[feature].values_.city,
-                  scale: 1.2,
-                  textBaseline: "bottom",
-                  offsetY: -5,
-                }),
-              })
-            );
-          }
-        }
-      });
-      this.map.addLayer(this.importedVectorLayer);
     },
     postFeature() {
       const currentFeature = this.vectorLayer
@@ -241,7 +223,6 @@ export default {
         })
         .catch((error) => console.log(error));
       this.vectorLayer.getSource().refresh();
-      this.importedVectorLayer.getSource().refresh();
     },
   },
   watch: {
@@ -289,6 +270,7 @@ export default {
   bottom: 12px;
   left: -50px;
   min-width: 200px;
+  min-height: 200px;
 }
 #input {
   font-size: small;
