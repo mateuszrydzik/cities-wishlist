@@ -1,6 +1,11 @@
 # Cities wishlist
 
-Web app for travel planning
+### Find all the cities you ever wished to visit. 
+
+Easy to use app that helps you plan your future trips. 
+Mark your travel destination on the map with a single click. City's name will be automatically saved! Add notes to your markers and access it's information in a pop-up.
+
+_Docker required_
 
 ## Setup
 ### Create .env file containing:
@@ -21,3 +26,10 @@ if it's the first time, run
 ```sh
 docker compose up --build
 ```
+
+## Usage
+* To access client:
+localhost:{NGINX_PORT}
+
+* To access documentation:
+localhost:{NGINX_PORT}/api/docs
