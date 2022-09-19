@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  api:
+    command: sh -c "./run_api_prod.sh"
+
+  nginx:
+    ports:
+      - "80:80"
