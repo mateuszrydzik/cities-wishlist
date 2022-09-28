@@ -32,3 +32,4 @@ backend/api/__pycache__/models.cpython-310.pyc
 backend/.env
 backend/docker/database/postgres-data
 manage_config.py
+__pycache__
